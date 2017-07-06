@@ -10,9 +10,16 @@ import UIKit
 
 func shortNameForName(name: String) -> String {
     let vowels = CharacterSet(charactersIn: "aeiou")
-    let lowecaseName = name.lowercased()
-    let rangeOfFirstVowel = name.rangeOfCharacter(from: vowels)
-    return lowecaseName.substring(from: rangeOfFirstVowel!.lowerBound)
+    let lowercaseName = name.lowercased()
+    
+    var shortName = ""
+    if let rangeOfFirstVowel = lowercaseName.rangeOfCharacter(from: vowels) {
+        shortName = lowercaseName.substring(from: rangeOfFirstVowel.lowerBound)
+    } else {
+        shortName = lowercaseName
+    }
+    
+    return shortName
 }
 
 let bananaFanaTemplate = [
@@ -50,20 +57,19 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     @IBAction func reset(_ sender: Any) {
         nameField.text = ""
         lyricsView.text = ""
     }
 
     @IBAction func displayLyrics(_ sender: Any) {
-        if !(nameField.text?.isEmpty)! {
-            lyricsView.text = lyricsForName(lyricsTmeplate: bananaFanaTemplate, fullName: (nameField.text)!)
+        guard let name = nameField.text, name != "" else {
+            print("name field is nil")
+            return
         }
+
+        lyricsView.text = lyricsForName(lyricsTmeplate: bananaFanaTemplate, fullName: name)
+        
     }
 }
 
